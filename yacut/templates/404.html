@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block title %}404. Ты не пройдешь {% endblock title %}
+{% block style %}
+    <style>
+        .center-text {
+            text-align: center;
+        }
+
+        img.right {
+            float: right;
+        }
+    </style>
+{% endblock %}
+{% block content %}
+<main>
+  <section class="container my-5">
+    <div class="row center-text">
+      <div class="col-lg-12">
+        <h1 class="display-4 mb-5">Ты не пройдешь!</h1>
+        <p>Если раньше тут что-то было, то сейчас этого нет :c</p>
+        <a href="{{ url_for('index_view') }}">Вернуться на главную</a>
+        <img class="img-fluid mx-auto d-block" src="{{ url_for('static', filename='img/404.png') }}" alt="" />
+      </div>
+    </div>
+  </section>
+</main>
+{% endblock content %}
