@@ -1,11 +1,12 @@
-from re import IGNORECASE
-
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, URLField
 from wtforms.validators import DataRequired, Length, Optional, Regexp, URL
 
-from yacut.settings import LINK_LENGTH, SHORT_ID_LENGTH
-
+from yacut.settings import (
+    LINK_LENGTH,
+    SHORT_ID_LENGTH,
+    SHORT_ID_ALLOWED_EXPRESSION,
+)
 
 ORIGINAL_LINK_LABEL = 'Ссылка на оригинальный источник'
 CUSTOM_ID_LABEL = 'Может есть какое-то пожелание'
@@ -27,7 +28,7 @@ class URLMapForm(FlaskForm):
         validators=[
             Optional(),
             Length(max=SHORT_ID_LENGTH),
-            Regexp('^[A-Z/d]+$', flags=IGNORECASE),
+            Regexp(SHORT_ID_ALLOWED_EXPRESSION),
         ],
     )
     submit = SubmitField(SUBMIT_LABEL)

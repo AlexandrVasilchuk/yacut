@@ -63,6 +63,17 @@ pip install -r requirements.txt
 
 ## Запустить "укротителя":
 
+Поднимаем базу данных:
+
+```shell
+flask shell
+
+>>>from yacut import db
+>>>db.create_all()
+```
+
+И запускаем "укротителя":
+
 ```bash
 flask run
 ```
