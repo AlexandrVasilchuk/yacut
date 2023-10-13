@@ -1,9 +1,9 @@
 from flask import jsonify, request
 from flask_api import status
 
-from yacut.models import URLMap
 from yacut import app
 from yacut.exceptions import InvalidAPIUsage
+from yacut.models import URLMap
 
 
 EMPTY_DATA_MESSAGE = 'Отсутствует тело запроса'

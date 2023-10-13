@@ -1,4 +1,4 @@
-from flask import render_template, jsonify
+from flask import jsonify, render_template
 from flask_api import status
 
 from yacut import app, db

@@ -1,16 +1,16 @@
 from flask import (
-    render_template,
     abort,
-    redirect,
     flash,
+    render_template,
+    redirect,
     request,
 )
 from flask_api import status
 
 from yacut import app
-from yacut.models import URLMap
-from yacut.forms import URLMapForm
 from yacut.exceptions import InvalidAPIUsage
+from yacut.forms import URLMapForm
+from yacut.models import URLMap
 
 
 NOT_UNIQUE_SHORT_ID_MESSAGE = (

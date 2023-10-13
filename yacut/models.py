@@ -3,14 +3,15 @@ from random import choices
 from typing import Optional
 
 from yacut import db
+from yacut.exceptions import InvalidAPIUsage
 from yacut.settings import (
-    SHORT_ID_LENGTH,
-    LINK_LENGTH,
-    SHORT_ID_ALLOWED_CHARS,
     AUTOMATIC_SHORT_ID_LENGTH,
     ATTEMPTS_COUNT,
+    LINK_LENGTH,
+    SHORT_ID_LENGTH,
+    SHORT_ID_ALLOWED_CHARS,
+
 )
-from yacut.exceptions import InvalidAPIUsage
 
 
 class URLMap(db.Model):

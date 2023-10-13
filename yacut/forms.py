@@ -1,9 +1,10 @@
 from re import IGNORECASE
+
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, URLField
-from wtforms.validators import DataRequired, Length, Optional, URL, Regexp
+from wtforms.validators import DataRequired, Length, Optional, Regexp, URL
 
-from yacut.settings import SHORT_ID_LENGTH, LINK_LENGTH
+from yacut.settings import LINK_LENGTH, SHORT_ID_LENGTH
 
 
 ORIGINAL_LINK_LABEL = 'Ссылка на оригинальный источник'
