@@ -1,6 +1,3 @@
-import random
-from typing import Optional
-
 from flask import (
     render_template,
     abort,
@@ -8,57 +5,42 @@ from flask import (
     flash,
     request,
 )
+from flask_api import status
 
-from yacut import app, db
+from yacut import app
 from yacut.models import URLMap
 from yacut.forms import URLMapForm
-from yacut.settings import SHORT_ID_ALLOWED_CHARS
+from yacut.exceptions import InvalidAPIUsage
 
 
 NOT_UNIQUE_SHORT_ID_MESSAGE = (
     'Предложенный вариант короткой ссылки уже существует.'
 )
-
-
-def generate_short_id(allowed_chars: str) -> str:
-    return ''.join(char for char in random.choices(allowed_chars, k=6))
-
-
-def short_id_exists(short_id: str) -> Optional[URLMap]:
-    object = URLMap.query.filter_by(short=short_id).first()
-    return object if object is not None else None
-
-
-def get_unique_short_id(allowed_chars: str = SHORT_ID_ALLOWED_CHARS) -> str:
-    short_id = generate_short_id(allowed_chars)
-    while short_id_exists(short_id):
-        short_id = generate_short_id(allowed_chars)
-    return short_id
+SHORT_ADDRESS = ''
 
 
 @app.route('/', methods=['GET', 'POST'])
 def index_view():
     form = URLMapForm()
-    if form.validate_on_submit():
-        short_id = form.custom_id.data
-        if short_id_exists(short_id):
-            flash(NOT_UNIQUE_SHORT_ID_MESSAGE)
-            return render_template('index.html', form=form)
-        if not short_id:
-            short_id = get_unique_short_id()
-        db.session.add(
-            URLMap(original=form.original_link.data, short=short_id)
-        )
-        db.session.commit()
-        return render_template(
-            'index.html', form=form, result=request.url + short_id
-        )
-    return render_template('index.html', form=form)
+    if not form.validate_on_submit():
+        return render_template('index.html', form=form)
+
+    short_id = form.custom_id.data
+    try:
+        map = URLMap.create_short_id(form.original_link.data, short_id)
+    except InvalidAPIUsage:
+        flash(NOT_UNIQUE_SHORT_ID_MESSAGE)
+        return render_template('index.html', form=form)
+    return render_template(
+        'index.html',
+        form=form,
+        result=request.root_url + SHORT_ADDRESS + map.short,
+    )
 
 
-@app.route('/<short>', methods=['GET'])
+@app.route(f'{SHORT_ADDRESS}/<short>', methods=['GET'])
 def redirect_to_short(short: str):
-    object = short_id_exists(short)
-    if object is None:
-        return abort(404)
-    return redirect(object.original), 302
+    map = URLMap.map_by_parameters(short=short)
+    if map is None:
+        return abort(status.HTTP_404_NOT_FOUND)
+    return redirect(map.original), status.HTTP_302_FOUND
