@@ -1,5 +1,6 @@
 import os
 import string
+import re
 
 
 class Config(object):
@@ -12,9 +13,10 @@ class Config(object):
     )
 
 
-SHORT_ID_LENGTH = 16
+SHORT_LENGTH = 16
 LINK_LENGTH = 2_000
-AUTOMATIC_SHORT_ID_LENGTH = 6
+AUTOMATIC_SHORT_LENGTH = 6
 ATTEMPTS_COUNT = 10
-SHORT_ID_ALLOWED_CHARS = string.digits + string.ascii_letters
-SHORT_ID_ALLOWED_EXPRESSION = rf'^[{SHORT_ID_ALLOWED_CHARS}]+$'
+SHORT_PATH = 'redirect_original'
+SHORT_ALLOWED_CHARS = string.digits + string.ascii_letters
+SHORT_ALLOWED_EXPRESSION = rf'^[{re.escape(SHORT_ALLOWED_CHARS)}]+$'

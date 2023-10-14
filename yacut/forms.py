@@ -4,8 +4,8 @@ from wtforms.validators import DataRequired, Length, Optional, Regexp, URL
 
 from yacut.settings import (
     LINK_LENGTH,
-    SHORT_ID_LENGTH,
-    SHORT_ID_ALLOWED_EXPRESSION,
+    SHORT_LENGTH,
+    SHORT_ALLOWED_EXPRESSION,
 )
 
 ORIGINAL_LINK_LABEL = 'Ссылка на оригинальный источник'
@@ -27,8 +27,8 @@ class URLMapForm(FlaskForm):
         CUSTOM_ID_LABEL,
         validators=[
             Optional(),
-            Length(max=SHORT_ID_LENGTH),
-            Regexp(SHORT_ID_ALLOWED_EXPRESSION),
+            Length(max=SHORT_LENGTH),
+            Regexp(SHORT_ALLOWED_EXPRESSION),
         ],
     )
     submit = SubmitField(SUBMIT_LABEL)

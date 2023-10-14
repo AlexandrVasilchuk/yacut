@@ -10,9 +10,10 @@ from flask_api import status
 from yacut import app
 from yacut.forms import URLMapForm
 from yacut.models import URLMap
+from yacut.settings import SHORT_PATH
 
 
-NOT_UNIQUE_SHORT_ID_MESSAGE = (
+NOT_UNIQUE_SHORT_MESSAGE = (
     'Предложенный вариант короткой ссылки уже существует.'
 )
 
@@ -23,29 +24,28 @@ def index_view():
     if not form.validate_on_submit():
         return render_template('index.html', form=form)
 
-    short_id = form.custom_id.data
     try:
         return render_template(
             'index.html',
             form=form,
             result=url_for(
-                'redirect_to_short',
-                short=URLMap.create_short_id(
-                    form.original_link.data, short_id
+                SHORT_PATH,
+                short=URLMap.create(
+                    form.original_link.data, form.custom_id.data
                 ).short,
                 _external=True,
             ),
         )
 
     except ValueError:
-        flash(NOT_UNIQUE_SHORT_ID_MESSAGE)
+        flash(NOT_UNIQUE_SHORT_MESSAGE)
         return render_template('index.html', form=form)
-    except UnboundLocalError:
+    except RuntimeError:
         return abort(status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 @app.route('/<short>', methods=['GET'])
-def redirect_to_short(short: str):
+def redirect_original(short: str):
     map = URLMap.get(short=short)
     if map is None:
         return abort(status.HTTP_404_NOT_FOUND)
