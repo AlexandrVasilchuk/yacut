@@ -10,7 +10,7 @@ from flask_api import status
 from yacut import app
 from yacut.forms import URLMapForm
 from yacut.models import URLMap
-from yacut.settings import SHORT_PATH
+from yacut.settings import SHORT_VIEW
 
 
 NOT_UNIQUE_SHORT_MESSAGE = (
@@ -29,7 +29,7 @@ def index_view():
             'index.html',
             form=form,
             result=url_for(
-                SHORT_PATH,
+                SHORT_VIEW,
                 short=URLMap.create(
                     form.original_link.data, form.custom_id.data
                 ).short,

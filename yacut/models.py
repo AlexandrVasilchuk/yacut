@@ -32,27 +32,23 @@ class URLMap(db.Model):
         return URLMap.query.filter_by(**kwargs).first()
 
     @staticmethod
+    def generate_unique_short():
+        for _ in range(ATTEMPTS_COUNT):
+            short = ''.join(choices(SHORT_ALLOWED_CHARS, k=AUTOMATIC_SHORT_LENGTH))
+            if URLMap.get(short=short) is None:
+                return short
+        raise RuntimeError(SHORT_NOT_GENERATED)
+
+    @staticmethod
     def create(
-        original_link: str, short: str = None, validate_value: bool = False
+        original_link: str, short: str = None, validate: bool = False
     ) -> 'URLMap':
-        if validate_value and len(original_link) > LINK_LENGTH:
+        if validate and len(original_link) > LINK_LENGTH:
             raise ValueError(ORIGINAL_LINK_TOO_LONG)
         if not short:
-            shorts = dropwhile(
-                lambda short: URLMap.get(short=short),
-                (
-                    ''.join(
-                        choices(SHORT_ALLOWED_CHARS, k=AUTOMATIC_SHORT_LENGTH)
-                    )
-                    for _ in range(ATTEMPTS_COUNT)
-                ),
-            )
-            try:
-                short = next(shorts)
-            except StopIteration:
-                raise RuntimeError(SHORT_NOT_GENERATED)
+            short = URLMap.generate_unique_short()
         else:
-            if validate_value and not (
+            if validate and not (
                 len(short) <= SHORT_LENGTH
                 and re.match(SHORT_ALLOWED_EXPRESSION, short)
             ):
@@ -65,4 +61,4 @@ class URLMap(db.Model):
         return map
 
     def __repr__(self):
-        return f"{self.__class__.__name__}{self.id, self.original, self.short}"
+        return f'{self.__class__.__name__}{self.id, self.original, self.short}'

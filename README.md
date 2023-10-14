@@ -63,13 +63,10 @@ pip install -r requirements.txt
 
 ## Запустить "укротителя":
 
-Поднимаем базу данных:
+Применяем миграции:
 
-```shell
-flask shell
-
->>>from yacut import db
->>>db.create_all()
+```bash
+flask db upgrade
 ```
 
 И запускаем "укротителя":

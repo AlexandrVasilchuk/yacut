@@ -4,7 +4,7 @@ from flask_api import status
 from yacut import app
 from yacut.exceptions import InvalidAPIUsage
 from yacut.models import URLMap
-from yacut.settings import SHORT_PATH
+from yacut.settings import SHORT_VIEW
 
 
 EMPTY_DATA_MESSAGE = 'Отсутствует тело запроса'
@@ -28,7 +28,7 @@ def create_link():
                 {
                     'url': map.original,
                     'short_link': url_for(
-                        SHORT_PATH, short=map.short, _external=True
+                        SHORT_VIEW, short=map.short, _external=True
                     ),
                 }
             ),
