@@ -1,6 +1,5 @@
 import re
 from datetime import datetime
-from itertools import dropwhile
 from random import choices
 from typing import Optional
 
